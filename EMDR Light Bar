@@ -1,0 +1,60 @@
+#include "FastLED.h"
+ 
+#define NUM_LEDS 60 //The amount of LEDs on your ARGB LED Strip that you wish to use
+#define DATA_PIN 7 //The Digital Pin on Arduino that connects to the LED Strip's Data Pin (DIN)
+ 
+int intensityPin = A0;
+int speedPin = A2;
+int speed;
+int intensity;
+ 
+CRGB leds[NUM_LEDS]; 
+//Set an array length the same as the total LEDs on your strip 
+//so each LED can be addressed separately in setup/loop 
+//e.g. leds[0] for the first one, leds[1] for the second one and so on 
+ 
+ 
+void setup() {
+  FastLED.addLeds<WS2812, DATA_PIN>(leds, NUM_LEDS); 
+  //Initialise the LED strip with the correct strip type (e.g. WS2812 is common), 
+  //Arduino Digital Pin and no. of LEDs to use
+ 
+  pinMode(speedPin, INPUT);
+  pinMode(intensityPin, INPUT);
+  Serial.begin(9600);
+}
+ 
+ 
+void loop() {
+ 
+ 
+  green_led();
+  revgreen_led();
+ 
+}
+ 
+void green_led() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    intensity = map(analogRead(intensityPin),0,1023,0,255);
+    leds[i] = CRGB(intensity,0,0);
+    FastLED.show();
+    speed = map(analogRead(speedPin),0,1023,0,255);
+    //Serial.println(speed);
+    Serial.println(intensity);
+    delay(speed);
+    FastLED.clear();  
+  } 
+}
+ 
+void revgreen_led() {
+  for (int i = NUM_LEDS - 1; i >= 0; i--) {
+    intensity = map(analogRead(intensityPin),0,1023,0,255);
+    leds[i] = CRGB(intensity,0,0);
+    FastLED.show();
+    speed = map(analogRead(speedPin),0,1023,0,255);
+    //Serial.println(speed);
+    Serial.println(intensity);
+    delay(speed);
+    FastLED.clear();  
+  } 
+}
